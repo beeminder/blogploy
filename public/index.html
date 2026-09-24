@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #authInput {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 350px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #deployButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #ff4136;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #deployButton:enabled {
+            cursor: pointer;
+            opacity: 1;
+            background-color: #ff4136;
+        }
+        #deployButton:enabled:hover {
+            background-color: #ff5a4f;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            width: 350px;
+            min-height: 50px;
+            text-align: center;
+        }
+        p {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h3>Promise you're authorized to re-deploy the blog?</h3>
+    <input type="text" id="authInput" placeholder="I promise I'm authorized to re-deploy the blog" autocomplete="off">
+    <button id="deployButton" disabled>Re-Deploy The Blog!</button>
+    <div id="result"></div>
+    <p>
+    (Be patient, it takes a few minutes)
+    </p>
+    <script>
+        const authInput = document.getElementById('authInput');
+        const deployButton = document.getElementById('deployButton');
+        const resultDiv = document.getElementById('result');
+        authInput.addEventListener('input', function() {
+            deployButton.disabled = this.value !== "I promise I'm authorized to re-deploy the blog";
+        });
+        deployButton.addEventListener('click', async function() {
+            resultDiv.textContent = 'Sending request...';
+            try {
+                const response = await fetch('/deploy');
+                const data = await response.text();
+                resultDiv.textContent = 'Response: ' + data;
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
